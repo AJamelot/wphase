@@ -331,7 +331,7 @@ def plot_etopo(file,m,ax):
                        orientation='horizontal')
         plt.axes(ax)
 
-def plotxy(ifile='grid_search_xy_out',ofile='grid_search_xy.pdf',basemapflag=False,mksmin=1.,
+def plotxy(ifile='grid_search_xy_out',xyzfile='grid_search_xyz_out',ofile='grid_search_xy.pdf',basemapflag=False,mksmin=1.,
         mksmax=30.,delta=XY_NX*XY_DX,resolution = 'h'):
     # Initialize variables
     rms  = []
@@ -340,7 +340,6 @@ def plotxy(ifile='grid_search_xy_out',ofile='grid_search_xy.pdf',basemapflag=Fal
     flag = False
     # Read file grid search XYZ
     # WARNING :: PDE from XYZ is the initial epicenter 
-    xyzfile='grid_search_xyz_out'
     if os.path.exists(xyzfile):
         latopt,lonopt,depopt,rmsopt,ilatpde,ilonpde,deppde,rmspde,lats,lons,deps,rmss,depths,rmsdep = rxyzgfile(xyzfile)
     # Read file grid search XY
@@ -505,10 +504,10 @@ def disphelp(cmd):
     print('   -b, --basemap        display coastlines and bathymetry')
     print('   --its  \'file\'       set input ASCII file for ts (grid_search_ts_out)')
     print('   --ixy  \'file\'       set input ASCII file for xy ((grid_search_xy_out))')
-    print('   --ixyz \'file\'       set input ASCII file for xy ((grid_search_xyz_out))')
+    print('   --ixyz \'file\'       set input ASCII file for xyz ((grid_search_xyz_out))')
     print('   --ots  \'file\'       set output png file for ts (grid_search_ts.pdf)')
     print('   --oxy  \'file\'       set output png file for xy ((grid_search_xy.pdf))')
-    print('   --oxyz \'file\'       set output png file for xy ((grid_search_xyz.pdf))')
+    print('   --oxyz \'file\'       set output png file for xyz ((grid_search_xyz.pdf))')
     print('\n   -h,  --help           display this help and exit')
     print('\nReport bugs to: <zacharie.duputel@eost.u-strasbg.fr>')
     # All done
@@ -569,7 +568,7 @@ def main(argv):
     if flagts:
         plotts(ts_ifile,ts_ofile)
     if flagxy:
-        plotxy(xy_ifile,xy_ofile,basemapflag=basemap)
+        plotxy(xy_ifile,xyz_ifile,xy_ofile,basemapflag=basemap)
     if flagxyz:
         #plotxyz(flag=False)
         plotxyz(xyz_ifile,xy_ifile,xyz_ofile,flag=True)
