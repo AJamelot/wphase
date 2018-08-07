@@ -33,6 +33,19 @@
 
 # GRID SEARCH PLOTS
 
+# Insert WPHASE BIN in sys.path (Useful to get local versions)
+import os,sys
+WPHOME = os.path.expandvars('$WPHASE_HOME')
+WPBIN = os.path.join(WPHOME,'bin')
+sys.path.insert(0,'./')
+sys.path.insert(1,WPBIN)
+
+# Avoid writing pyc files
+sys.dont_write_bytecode = True
+
+# WPHASE ARGUMENTS
+from Arguments import *
+
 # Customizing matplotlib
 import matplotlib as mpl
 mpl.use('AGG')
@@ -42,6 +55,7 @@ import sys
 import getopt as go
 import numpy as np
 import matplotlib.pyplot as plt
+
 
 # Avoid writing pyc files
 sys.dont_write_bytecode = True
@@ -318,8 +332,7 @@ def plot_etopo(file,m,ax):
         plt.axes(ax)
 
 def plotxy(ifile='grid_search_xy_out',ofile='grid_search_xy.pdf',basemapflag=False,mksmin=1.,
-        mksmax=30.,delta=1.0,resolution = 'h'):
-    from os.path import expandvars,exists 
+        mksmax=30.,delta=XY_NX*XY_DX,resolution = 'h'):
     # Initialize variables
     rms  = []
     lon  = []
@@ -328,12 +341,12 @@ def plotxy(ifile='grid_search_xy_out',ofile='grid_search_xy.pdf',basemapflag=Fal
     # Read file grid search XYZ
     # WARNING :: PDE from XYZ is the initial epicenter 
     xyzfile='grid_search_xyz_out'
-    if exists(xyzfile):
+    if os.path.exists(xyzfile):
         latopt,lonopt,depopt,rmsopt,ilatpde,ilonpde,deppde,rmspde,lats,lons,deps,rmss,depths,rmsdep = rxyzgfile(xyzfile)
     # Read file grid search XY
     # WARNING :: PDE from XY is the solution of grid search in Z 
     latopt,lonopt,depopt,rmsopt,latpde,lonpde,rmspde,lat,lon,rms = r_xy_gfile(ifile) 
-    if not exists(xyzfile):
+    if not os.path.exists(xyzfile):
         ilatpde=latpde
         ilonpde=lonpde
     # RMS Scale
@@ -375,8 +388,8 @@ def plotxy(ifile='grid_search_xy_out',ofile='grid_search_xy.pdf',basemapflag=Fal
         m = Basemap(projection='merc',llcrnrlon=lonll,llcrnrlat=latll,urcrnrlon=lonur,
                 urcrnrlat=latur,resolution=resolution)
         # Bathymetry        
-        ETOPO_file = expandvars('$ETOPOFILE')
-        if exists(ETOPO_file):
+        ETOPO_file = os.path.expandvars('$ETOPOFILE')
+        if os.path.exists(ETOPO_file):
             try:
                 plot_etopo(ETOPO_file,m,ax1)
                 etopoflag=True
@@ -400,8 +413,8 @@ def plotxy(ifile='grid_search_xy_out',ofile='grid_search_xy.pdf',basemapflag=Fal
                 dashes=[1,1],linewidth=0.5,color='k')
         if not etopoflag:
             try:
-                BLUEMARBLE_file = expandvars('$BLUEMARBLEFILE')
-                if exists(BLUEMARBLE_file):
+                BLUEMARBLE_file = os.path.expandvars('$BLUEMARBLEFILE')
+                if os.path.exists(BLUEMARBLE_file):
                     m.warpimage(image=BLUEMARBLE_file)
                 else:
                     if BLUEMARBLE_file[0]=='$':

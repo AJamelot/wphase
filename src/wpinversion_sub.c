@@ -533,6 +533,32 @@ void get_gap(sachdr *hd_synt, int ns, double *gap)
     free((void*)tmp) ;
 }
 
+
+/*****************************************/
+/*    set_dmindmax(hd_synt, ns, opt)     */
+/*****************************************/
+/* Compute gap                           */
+/* Input: hd_synt: structs sac headers   */
+/*        nsac   : nb of channels      */
+/*        opt    : structopt to fill out */
+void set_dmindmax(sachdr *hd_synt, int nsac, structopt *opt)
+{
+    int i ;
+    double gcarc;
+    
+    opt->dmin = 2.e4 ;
+    opt->dmax = 0.   ;  
+    
+    for( i=0 ; i<nsac ; i++)
+    {
+        gcarc = (double) hd_synt[i].gcarc ;
+        if (opt->dmin > gcarc)
+            opt->dmin = gcarc ;
+        if (opt->dmax < gcarc)
+            opt->dmax = gcarc ;
+    }
+}
+
 void w_o_saclst(int ns, char **sacfiles, sachdr *hd_synt, double **rms, double *data_norm, 
                    structopt *opt, FILE *o_log) 
 {
@@ -1606,6 +1632,7 @@ void set_matrices (int *nsac, int *nsini,char ***sacfiles,sachdr **hd_synt,doubl
         ns++ ;
     }
     fclose(i_sac) ;
+
     /* Memory Freeing */
     for(i=ns;i<*nsac;i++)
         free((void*)(*sacfiles)[i]) ;
@@ -2177,9 +2204,9 @@ int find_coor(double **coords,int Ngrid, double lat,double lon,double dep)
 {
     int i;
     for(i=0;i<Ngrid;i++)
-        if( (int)round(coords[i][0]*100.)==(int)round(lat*100.)
-                  && (int)round(coords[i][1]*100.)==(int)round(lon*100.)
-                  && (int)round(coords[i][2]*100.)==(int)round(dep*100.) )
+        if( (int)round(coords[i][0]*10000.)==(int)round(lat*10000.)
+                  && (int)round(coords[i][1]*10000.)==(int)round(lon*10000.)
+                  && (int)round(coords[i][2]*10000.)==(int)round(dep*10000.) )
             return 1 ;     
     return 0 ;
 }
@@ -2568,9 +2595,11 @@ void xy_gridsearch(int nsac,int M, int nd,double *dv,double *tv, sachdr *hd_synt
     if (IZ[0]<l)
         IZ[0] = l;
     if ((k%2) != (IZ[0]%2)) 
-        IZ[0]+= 1;
+        if((IZ[0]+1)<=IZ[1])
+            IZ[0]+= 1; 
     if (IZ[1]<=IZ[0]) 
     {
+            
         IZ[1]   = IZ[0] ;
         opt->dz = 0     ;
     }
