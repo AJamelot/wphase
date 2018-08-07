@@ -318,9 +318,16 @@ def main(argv):
             ylims = YLIMFIXED
         plt.ylim(ylims)        
         # Annotations
+        plt.rcParams['font.family'] = 'sans-serif'
+        plt.rcParams['font.sans-serif'] = 'Arial'
+        plt.rcParams['mathtext.fontset'] = 'custom'
+        plt.rcParams['mathtext.rm'] = 'sans'
+        plt.rcParams['mathtext.it'] = 'sans:italic'
+        plt.rcParams['mathtext.default'] = 'it'
+
         if sacdata.kcmpnm[2] == 'Z':
             if sys.version_info >= (2,7):
-                label = r'%s %s %s %s $(\phi,\Delta) = %6.1f^{\circ}, %6.1f^{\circ}$'%(
+                label = r'%s %s %s %s $(\phi,\Delta) = %6.1f\degree, %6.1f\degree$'%(
                     sacdata.knetwk,sacdata.kstnm, sacdata.kcmpnm, sacdata.khole,
                     sacdata.az, sacdata.gcarc)
             else:
@@ -330,8 +337,8 @@ def main(argv):
             
         else:
             if sys.version_info >= (2,7):
-                label  = r'%s %s %s %s $(\phi,\Delta,\alpha) = %6.1f^{\circ},'
-                label += '%6.1f^{\circ}, %6.1f^{\circ}$'
+                label  = r'%s %s %s %s $(\phi,\Delta,\alpha) = %6.1f\degree,'
+                label += '%6.1f\degree, %6.1f\degree$'
                 label  = label%(sacdata.knetwk,sacdata.kstnm, sacdata.kcmpnm, sacdata.khole,
                                 sacdata.az, sacdata.gcarc, sacdata.cmpaz) 
             else:
