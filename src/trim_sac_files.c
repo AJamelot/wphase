@@ -114,6 +114,12 @@ int main(int argc, char *argv[])
         /* Set travel time */
         xdegd = (double)xdeg ;
         trav_time(xdegd,tv,dv,nd,&P_tt,&tterr) ;
+        if ( abs(eq.evla) > 0 && abs(eq.evlo) > 0 )
+	{
+            fprintf(stdout, "DEBUG (trim_sac_files) :: using available centroid location\n") ; 
+            fprintf(stdout, "DEBUG (trim_sac_files) :: pde: %f / %f cent: %f/%f \n",eq.pde_evla,eq.pde_evlo,eq.evla,eq.evlo) ;
+            distaz(eq.evla,eq.evlo,&hdr.stla,&hdr.stlo,1,&dist,&az,&baz,&xdeg,&nerr) ;
+	}
         /* Set event origin time in sac header variable 'o' (relative to the reference time) */
         ymd2jul(eq.ot_ye,eq.ot_mo,eq.ot_dm,&ot_jday) ;
         delta_t(eq.ot_ye,ot_jday,eq.ot_ho,eq.ot_mi,eq.ot_se,eq.ot_ms, hdr.nzyear,hdr.nzjday,hdr.nzhour,hdr.nzmin,hdr.nzsec,hdr.nzmsec,&tdiff) ;
@@ -222,7 +228,7 @@ void get_params(int argc, char **argv, int *un, char **i_sacs, char **o_sacs,
     strcpy(keys[i++],"DMAX")    ;
 
     get_i_master(i_tmp, keys, 4, eq) ;  
-    get_cmtf( eq, 0) ;
+    get_cmtf( eq, 1) ;
   
     /* Memory Freeing */
     for(i=0 ; i<4 ; i++)
